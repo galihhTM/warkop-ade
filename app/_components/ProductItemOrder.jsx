@@ -22,18 +22,27 @@ const resolveImageUrl = (product, backendBase) => {
   let first = candidates.find(Boolean);
   if (!first) return null;
 
-  // --- PATCH: perbaiki kasus "https//" tanpa titik dua
-  first = first.replace(/^https?\/\//i, (m) => (m.includes(":") ? m : m.replace("/", "://")));
+  // --- FIX 1: perbaiki URL yang salah format (https// jadi https://)
+  if (/^https\/\//i.test(first)) first = first.replace(/^https\/\//i, "https://");
+  if (/^http\/\//i.test(first)) first = first.replace(/^http\/\//i, "http://");
 
-  // --- PATCH: jika sudah absolute (http/https), langsung return
+  // --- FIX 2: jika sudah absolute (http:// atau https://), return langsung
   if (/^https?:\/\//i.test(first)) return first;
 
+  // --- FIX 3: cegah penggabungan dua domain (kadang Strapi kasih "https//domain...")
+  if (first.includes("strapiapp.com")) {
+    const cut = first.match(/https?:\/\/[^ ]+/i);
+    if (cut && cut[0]) return cut[0];
+  }
+
+  // --- NORMAL PATH untuk relative URL
   const base = backendBase ? backendBase.replace(/\/+$/, "") : "";
   const path = first.startsWith("/") ? first : `/${first}`;
   const resolved = base ? `${base}${path}` : path;
 
   return resolved;
 };
+
 
 const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => {
   const [imageError, setImageError] = useState(false);
