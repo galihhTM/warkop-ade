@@ -2,36 +2,51 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-/**
- * ProductItemOrder
- * Props:
- * - product: object (dari API)
- * - count: number
- * - onAddClick: () => void
- * - onRemoveClick: () => void
- *
- * This component is used ONLY inside the order dialog (OrderSection).
- * It intentionally duplicates layout but adds quantity controls.
- */
+
 
 const resolveImageUrl = (product, backendBase) => {
   if (!product) return null;
+
+  // ambil kandidat path dari berbagai struktur Strapi (v4 berbeda-beda)
   const candidates = [
+    // new content structure: product.attributes.image...
     product?.attributes?.image?.data?.[0]?.attributes?.formats?.thumbnail?.url,
     product?.attributes?.image?.data?.[0]?.attributes?.formats?.small?.url,
     product?.attributes?.image?.data?.[0]?.attributes?.url,
+    // older / direct relations: product.image[0]...
     product?.image?.[0]?.formats?.thumbnail?.url,
+    product?.image?.[0]?.formats?.small?.url,
     product?.image?.[0]?.url,
-    product?.image?.url,
+    // some other variants
     product?.attributes?.thumbnail?.data?.attributes?.url,
+    product?.attributes?.thumbnail?.url,
+    product?.image?.url,
+    // fallback: maybe top-level url field
+    product?.attributes?.image?.url,
+    product?.image?.data?.[0]?.attributes?.url,
   ];
+
   const first = candidates.find(Boolean);
   if (!first) return null;
-  if (first.startsWith("http")) return first;
+
+  // jika sudah absolute URL (http/https) langsung return
+  if (/^https?:\/\//i.test(first)) return first;
+
+  // normalize backendBase: hapus trailing slash
   const base = backendBase ? backendBase.replace(/\/+$/, "") : "";
   const path = first.startsWith("/") ? first : `/${first}`;
-  return base ? `${base}${path}` : path;
+  const resolved = base ? `${base}${path}` : path;
+
+  // debug: tampilkan di console agar mudah dicek
+  // (hapus atau komentarkan console.log di production jika mau)
+
+  console.log("[resolveImageUrl] product id:", product?.id ?? product?.attributes?.id, "->", resolved);
+  console.log("ProductItemOrder", { id: product?.id ?? product?.attributes?.id, name, resolved });
+
+
+  return resolved;
 };
+
 
 const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => {
   const [imageError, setImageError] = useState(false);
