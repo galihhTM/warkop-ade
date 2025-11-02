@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
 
-// (Fungsi resolveImageUrl tetap sama)
+// ✅ FIX: tambahkan pengecekan lebih aman untuk URL berganda & https//
 const resolveImageUrl = (product, backendBase) => {
   if (!product) return null
 
@@ -17,7 +17,12 @@ const resolveImageUrl = (product, backendBase) => {
 
   const first = candidates.find(Boolean)
   if (!first) return null
-  if (first.startsWith('http')) return first
+
+  // 🔧 Jika sudah berisi domain lengkap, jangan tambah base URL
+  if (/^https?:\/\//i.test(first)) {
+    // Perbaiki jika Strapi return https// tanpa titik dua
+    return first.replace(/^https\/\//, 'https://').replace(/^http\/\//, 'http://')
+  }
 
   const base = backendBase ? backendBase.replace(/\/+$/, '') : ''
   const path = first.startsWith('/') ? first : `/${first}`
@@ -30,7 +35,7 @@ const ProductItem = ({product}) => {
 
   const backend = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || ''
   const resolved = !imageError ? resolveImageUrl(product, backend) : null
-  const fallback = '/no-image.png' 
+  const fallback = '/no-image.png'
   const finalImage = resolved || fallback
 
   const name = product?.attributes?.name ?? product?.name ?? 'Unnamed product'
@@ -65,8 +70,6 @@ const ProductItem = ({product}) => {
           <p className="text-gray-400 text-xs">Price not available</p>
         )}
       </div>
-      
-      
     </div>
   )
 }
