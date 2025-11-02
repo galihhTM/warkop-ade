@@ -19,9 +19,13 @@ const resolveImageUrl = (product, backendBase) => {
     product?.image?.data?.[0]?.attributes?.url,
   ];
 
-  const first = candidates.find(Boolean);
+  let first = candidates.find(Boolean);
   if (!first) return null;
 
+  // --- PATCH: perbaiki kasus "https//" tanpa titik dua
+  first = first.replace(/^https?\/\//i, (m) => (m.includes(":") ? m : m.replace("/", "://")));
+
+  // --- PATCH: jika sudah absolute (http/https), langsung return
   if (/^https?:\/\//i.test(first)) return first;
 
   const base = backendBase ? backendBase.replace(/\/+$/, "") : "";
@@ -42,7 +46,6 @@ const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => 
   const priceValue = product?.attributes?.price ?? product?.price ?? 0;
   const priceText = `Rp ${Number(priceValue).toLocaleString("id-ID")}`;
 
-  // Safe debug logs (only inside component scope)
   useEffect(() => {
     console.log("ProductItemOrder debug", {
       id: product?.id ?? product?.attributes?.id,
@@ -64,7 +67,6 @@ const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => 
 
       {/* Gambar */}
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-[#382a25]">
-        {/* Jika Next/Image masih bermasalah saat debug, kamu bisa ganti sementara ke <img> */}
         <Image
           src={finalImage}
           alt={name}
@@ -79,7 +81,6 @@ const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => 
       <div className="w-full mt-2 mb-3 px-2 flex items-center justify-between">
         <p className="font-bold text-lg text-white/90">{priceText}</p>
 
-        {/* Kontrol jumlah (only in order dialog) */}
         <div className="flex items-center gap-2">
           {count > 0 ? (
             <div className="flex items-center gap-3 bg-white/90 text-[#382a25] rounded-full px-2 py-1">
