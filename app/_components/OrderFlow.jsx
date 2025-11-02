@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { DialogTitle } from "@/components/ui/dialog";
 import { ChevronLeft, X, Minus, Plus } from "lucide-react";
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:1337";
+
 export const OrderFlow = ({
   selectedItems,
   setSelectedItems,
@@ -16,7 +18,7 @@ export const OrderFlow = ({
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:1337/api/products?populate=*");
+        const res = await fetch(`${API_BASE}/api/products?populate=*`);
         const data = await res.json();
 
         const groupedData = {};
@@ -91,7 +93,7 @@ export const OrderFlow = ({
                 {grouped[category].map((product) => {
                   const qty = selectedItems[product.id]?.qty || 0;
                   const imgUrl = product.image?.[0]?.url
-                    ? `http://localhost:1337${product.image[0].url}`
+                    ? `${API_BASE}${product.image[0].url}`
                     : "/fallback.png";
 
                   return (

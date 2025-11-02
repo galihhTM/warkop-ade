@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { ChevronLeft, Plus, Minus } from "lucide-react";
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:1337";
+
 export const OrderSummary = ({
   selectedItems,
   setSelectedItems,
@@ -45,7 +47,7 @@ export const OrderSummary = ({
         subtotal: item.price * item.qty,
       }));
 
-      const res = await fetch("http://localhost:1337/api/orders", {
+      const res = await fetch(`${API_BASE}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

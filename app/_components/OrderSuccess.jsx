@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:1337";
+
 export const OrderSuccess = ({
   orderNumber,
   totalPrice,
@@ -17,7 +19,7 @@ export const OrderSuccess = ({
     if (!orderNumber) return;
 
     // konek ke Strapi socket server
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:1337", {
+    const socket = io(API_BASE, {
       transports: ["websocket"],
       reconnectionAttempts: 5,
       timeout: 20000,

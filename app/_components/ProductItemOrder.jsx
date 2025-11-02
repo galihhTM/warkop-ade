@@ -1,27 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-
 
 const resolveImageUrl = (product, backendBase) => {
   if (!product) return null;
 
-  // ambil kandidat path dari berbagai struktur Strapi (v4 berbeda-beda)
   const candidates = [
-    // new content structure: product.attributes.image...
     product?.attributes?.image?.data?.[0]?.attributes?.formats?.thumbnail?.url,
     product?.attributes?.image?.data?.[0]?.attributes?.formats?.small?.url,
     product?.attributes?.image?.data?.[0]?.attributes?.url,
-    // older / direct relations: product.image[0]...
     product?.image?.[0]?.formats?.thumbnail?.url,
     product?.image?.[0]?.formats?.small?.url,
     product?.image?.[0]?.url,
-    // some other variants
     product?.attributes?.thumbnail?.data?.attributes?.url,
     product?.attributes?.thumbnail?.url,
     product?.image?.url,
-    // fallback: maybe top-level url field
     product?.attributes?.image?.url,
     product?.image?.data?.[0]?.attributes?.url,
   ];
@@ -29,24 +22,14 @@ const resolveImageUrl = (product, backendBase) => {
   const first = candidates.find(Boolean);
   if (!first) return null;
 
-  // jika sudah absolute URL (http/https) langsung return
   if (/^https?:\/\//i.test(first)) return first;
 
-  // normalize backendBase: hapus trailing slash
   const base = backendBase ? backendBase.replace(/\/+$/, "") : "";
   const path = first.startsWith("/") ? first : `/${first}`;
   const resolved = base ? `${base}${path}` : path;
 
-  // debug: tampilkan di console agar mudah dicek
-  // (hapus atau komentarkan console.log di production jika mau)
-
-  console.log("[resolveImageUrl] product id:", product?.id ?? product?.attributes?.id, "->", resolved);
-  console.log("ProductItemOrder", { id: product?.id ?? product?.attributes?.id, name, resolved });
-
-
   return resolved;
 };
-
 
 const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => {
   const [imageError, setImageError] = useState(false);
@@ -59,6 +42,17 @@ const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => 
   const priceValue = product?.attributes?.price ?? product?.price ?? 0;
   const priceText = `Rp ${Number(priceValue).toLocaleString("id-ID")}`;
 
+  // Safe debug logs (only inside component scope)
+  useEffect(() => {
+    console.log("ProductItemOrder debug", {
+      id: product?.id ?? product?.attributes?.id,
+      name,
+      resolved,
+      finalImage,
+      backend,
+    });
+  }, [product, resolved, finalImage, backend, name]);
+
   return (
     <div className="flex flex-col items-start text-white p-2 border border-transparent rounded-3xl transition-shadow duration-300 w-full bg-[#382a25]">
       {/* Nama */}
@@ -70,6 +64,7 @@ const ProductItemOrder = ({ product, count = 0, onAddClick, onRemoveClick }) => 
 
       {/* Gambar */}
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-[#382a25]">
+        {/* Jika Next/Image masih bermasalah saat debug, kamu bisa ganti sementara ke <img> */}
         <Image
           src={finalImage}
           alt={name}
