@@ -1,6 +1,7 @@
 // app/layout.js
 import { Saira } from "next/font/google";
 import { Miltonian } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
 const saira = Saira({
@@ -14,6 +15,11 @@ const miltonian = Miltonian({
   subsets: ["latin"],
 });
 
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
 export const metadata = {
   title: "Warkop Ade",
   description: "Warkop dengan suasana hangat dan tawa canda",
@@ -22,7 +28,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="id">
-      <body className={` ${saira.variable} ${miltonian.variable} antialiased scroll-smooth bg-white`}>
+      <body className={` ${saira.variable} ${miltonian.variable} ${montserrat.variable} antialiased scroll-smooth bg-white`}>
         {children}
       </body>
     </html>

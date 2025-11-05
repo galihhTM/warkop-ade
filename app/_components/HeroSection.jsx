@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog,DialogDescription, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import VisitorDialog from "./VisitorDialog";
 import { OrderFlow } from "./OrderFlow";
 import { OrderSummary } from "./OrderSummary";
@@ -196,6 +196,9 @@ export const HeroSection = ({ showAnimation }) => {
       >
         <DialogContent className="bg-transparent border-none shadow-none max-w-md p-0">
           <DialogTitle className="sr-only">Order dialog</DialogTitle>
+          <DialogDescription className="sr-only">
+            Langkah-langkah untuk memulai dan menyelesaikan pesanan Anda.
+          </DialogDescription>
 
           {step === 1 && (
             <VisitorDialog

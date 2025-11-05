@@ -2,32 +2,59 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 
 // ✅ FIX: tambahkan pengecekan lebih aman untuk URL berganda & https//
+// ✅ FIXED: URL Resolver Aman & Cerdas
+// ProductItem.jsx - Ganti seluruh fungsi resolveImageUrl dengan ini
+// ✅ FIX ULTIMATE: Utility resolveImageUrl yang menghilangkan protocol rusak apapun
 const resolveImageUrl = (product, backendBase) => {
-  if (!product) return null
+    // backendBase hanya ada di ProductItem & ProductItemOrder
+    const backend = backendBase || process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-  const candidates = [
-    product?.attributes?.image?.data?.[0]?.attributes?.formats?.thumbnail?.url,
-    product?.attributes?.image?.data?.[0]?.attributes?.formats?.small?.url,
-    product?.attributes?.image?.data?.[0]?.attributes?.url,
-    product?.image?.[0]?.formats?.thumbnail?.url,
-    product?.image?.[0]?.url,
-    product?.image?.url,
-    product?.attributes?.thumbnail?.data?.attributes?.url,
-  ]
+    // Kumpulkan semua kemungkinan lokasi URL (Dari kode Anda yang sudah berfungsi)
+    const candidates = [
+        product?.attributes?.image?.data?.[0]?.attributes?.formats?.thumbnail?.url,
+        product?.attributes?.image?.data?.[0]?.attributes?.formats?.small?.url,
+        product?.attributes?.image?.data?.[0]?.attributes?.url,
+        product?.image?.[0]?.formats?.thumbnail?.url,
+        product?.image?.[0]?.url, // Path yang sering digunakan
+        product?.image?.url,       // Path yang sering digunakan
+        product?.attributes?.thumbnail?.data?.attributes?.url,
+        // Tambahan untuk OrderFlow:
+        product?.image?.data?.[0]?.attributes?.url,
+    ];
 
-  const first = candidates.find(Boolean)
-  if (!first) return null
+    const rawUrl = candidates.find(Boolean);
+    if (!rawUrl) return "/no-image.png"; // Menggunakan fallback yang Anda tentukan
 
-  // 🔧 Jika sudah berisi domain lengkap, jangan tambah base URL
-  if (/^https?:\/\//i.test(first)) {
-    // Perbaiki jika Strapi return https// tanpa titik dua
-    return first.replace(/^https\/\//, 'https://').replace(/^http\/\//, 'http://')
-  }
+    // 🔴 FIX AKHIR (Paling Penting): Hapus prefix rusak, termasuk file:///S:// dan lainnya.
+    // 1. Ambil domain/path setelah protocol yang tidak valid (file:///S://, http//, dll)
+    let cleanedPath = rawUrl.replace(/^file:\/\/\/S:\/\/\/?|^\w+\/\/\/?/i, ''); 
 
-  const base = backendBase ? backendBase.replace(/\/+$/, '') : ''
-  const path = first.startsWith('/') ? first : `/${first}`
-  return base ? `${base}${path}` : path
-}
+    // 2. Gabungkan kembali dengan HTTPS:// untuk memastikan itu adalah URL mutlak
+    let normalized = `https://${cleanedPath}`; 
+    
+    
+    // --- Dari sini ke bawah adalah logic normalisasi Anda yang sudah OK ---
+
+    // 🔧 Perbaiki double domain: hapus domain ganda jika muncul (misalnya: https://media.strapiapp.com/https://media.strapiapp.com/...)
+    const doubleMatch = normalized.match(/https:\/\/[^h]*(https:\/\/.*)/i);
+    if (doubleMatch) {
+        normalized = doubleMatch[1];
+    }
+    
+    // 🔍 Jika normalized URL sekarang absolut dan mengandung domain Strapi yang valid, return.
+    if (/^https?:\/\//i.test(normalized)) {
+        // Cek apakah URL yang dihasilkan masuk akal (tidak kembali ke file lokal jika base URL kosong)
+        if (normalized.includes("strapiapp.com")) {
+            return normalized;
+        }
+    }
+    
+    // 🔧 Kalau relatif → gabungkan dengan base URL dari .env
+    const base = backend?.replace(/\/+$/, '') || '';
+    const path = cleanedPath.startsWith('/') ? cleanedPath : `/${cleanedPath}`;
+    return `${base}${path}`;
+};
+
 
 
 const ProductItem = ({product}) => {

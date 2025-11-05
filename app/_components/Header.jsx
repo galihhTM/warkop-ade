@@ -47,7 +47,7 @@ function Header() {
         { label: 'Pesan', target: 'menu' },
         { label: 'Bundle', target: 'bundle' },
         { label: 'Tentang', target: 'footer' },
-        { label: 'Keranjang', target: 'keranjang' },
+        { label: 'Menu', target: 'menu' },
     ];
 
     const NavLink = ({ label, onClick, target }) => (
@@ -64,12 +64,7 @@ function Header() {
 
     return (
         <>
-        <div className='sticky top-0 z-50 flex justify-center'>
-            {/* Perubahan kecil di className:
-                - tambahin relative supaya layout tetap rapi
-                - ubah overflow-hidden => overflow-visible supaya child fixed/absolute tidak terclip
-                - atur z-index sedikit turun (z-40) supaya menu overlay bisa di atasnya
-            */}
+        <div className='sticky top-0 z-50 flex justify-center font-montserrat'>          
             <motion.div 
                 className='relative p-4 shadow-xl border overflow-visible z-40 backdrop-blur-sm'
                 style={{ 

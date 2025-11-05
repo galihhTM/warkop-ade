@@ -108,7 +108,7 @@ const Section2 = () => {
   });
 
   return (
-    <div className="flex flex-col lg:flex-row items-start gap-8 mt-10 max-w-7xl mx-auto px-4 md:px-6">
+    <div className="flex flex-col lg:flex-row items-start gap-8 mt-10 max-w-7xl mx-auto px-4 md:px-6 ">
       <motion.div
         className="w-full lg:w-1/2 flex flex-col gap-4"
         variants={variantsLeft}
@@ -116,6 +116,9 @@ const Section2 = () => {
         whileInView="enter"
         viewport={{ once: false, amount: 0.18 }}
       >
+        <div className="w-full max-w-md mx-auto text-center p-6 bg-[#c1a87d] rounded-xl text-white font-semibold font-saira">
+          Silahkan klik tombol <span className=" text-[#382a25]">Mulai Order</span> di halaman atas jika ingin memesan/order
+        </div>
         {sortedCategories.map((category) => {
           const items = groups[category];
           const isOpen = openCategory === category;
@@ -124,7 +127,7 @@ const Section2 = () => {
             <section id="menu" key={category} className="mb-4">
               <div
                 onClick={() => setOpenCategory(isOpen ? null : category)}
-                className="flex items-center justify-between p-4 cursor-pointer rounded-3xl shadow-sm bg-[#faeed1] text-black"
+                className="flex items-center justify-between p-4 cursor-pointer rounded-3xl shadow-sm bg-[#faeed1] text-black font-montserrat"
               >
                 <span className="font-semibold text-lg">{category}</span>
                 <span
@@ -174,6 +177,7 @@ const Section2 = () => {
             autoRotate
             cameraControls
             exposure={1.2}
+            defaultZoom={0.1}
             style={{
               width: "85%",
               height: "85%",

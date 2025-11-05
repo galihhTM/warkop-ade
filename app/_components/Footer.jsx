@@ -52,7 +52,7 @@ const Footer = () => {
   return (
     <motion.footer
       id="footer"
-      className="bg-[#382a25] text-white mt-12 p-8 md:p-12 shadow-inner border-t-4 border-amber-700"
+      className="bg-[#382a25] text-white mt-12 p-8 md:p-12 shadow-inner border-t-4 border-amber-700 font-montserrat"
       variants={footerVariant}
       initial="hidden"
       whileInView="visible"

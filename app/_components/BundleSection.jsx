@@ -59,7 +59,7 @@ export const BundleSection = () => {
     <section
       id="bundle"
       ref={ref}
-      className="relative py-20 px-4 md:px-8 lg:px-24 max-w-7xl mx-auto overflow-hidden"
+      className="relative py-20 px-4 md:px-8 lg:px-24 max-w-7xl mx-auto overflow-hidden font-saira"
     >
       {/* Background */}
       <img
