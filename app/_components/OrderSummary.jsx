@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { ChevronLeft, Plus, Minus } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:1337";
 
@@ -9,7 +9,7 @@ export const OrderSummary = ({
   setSelectedItems,
   onBack,
   onFinish,
-  visitorCount, // ✅ Tambahan untuk kirim jumlah pengunjung
+  visitorCount, 
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -39,11 +39,12 @@ export const OrderSummary = ({
       const orderNumber = generateOrderNumber();
       const tableNumber = randomTable();
 
+      // PERUBAHAN KRUSIAL: MEMBUAT ARRAY DETAIL ITEM (items)
       const items = Object.values(selectedItems).map((item) => ({
         product_id: item.id.toString(),
         product_name: item.name,
         unit_price: item.price,
-        quantity: item.qty,
+        quantity: item.qty, // menggunakan qty
         subtotal: item.price * item.qty,
       }));
 
@@ -60,8 +61,8 @@ export const OrderSummary = ({
               0
             ),
             order_date: new Date().toISOString(),
-            statusOrder: "processing", // ✅ status default
-            visitor_count: visitorCount, // ✅ kirim jumlah pengunjung
+            statusOrder: "processing", 
+            visitor_count: visitorCount, 
             items,
           },
         }),
@@ -69,12 +70,15 @@ export const OrderSummary = ({
 
       if (!res.ok) throw new Error("Gagal membuat pesanan");
 
-      // ✅ Setelah sukses, kirim data ke komponen OrderSuccess
+      // PERUBAHAN KRUSIAL KEDUA: Kirim detail item ke komponen OrderSuccess
       onFinish({
         orderNumber,
         tableNumber,
         totalPrice,
+        visitorCount, 
+        orderItems: items, // <-- Data ini harus dikirim
       });
+
     } catch (err) {
       console.error("❌ Error saat bayar:", err);
       alert("Terjadi kesalahan saat mengirim pesanan!");

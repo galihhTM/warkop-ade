@@ -241,12 +241,14 @@ export const HeroSection = ({ showAnimation }) => {
               tableNumber={orderData?.tableNumber ?? tableNumber}
               visitorCount={visitorCount}
               totalPrice={orderData?.totalPrice ?? calculateTotal(selectedItems)}
+              orderItems={orderData?.orderItems}       
+              rawResponse={orderData?.rawResponse}     
               onReturn={() => {
                 setIsOpen(false);
                 setSelectedItems({});
                 setStep(1);
               }}
-            />
+            />    
           )}
         </DialogContent>
       </Dialog>
