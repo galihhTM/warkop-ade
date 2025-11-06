@@ -74,7 +74,7 @@ const Footer = () => {
               />
               Warkop Ade
             </div>
-            <p className="text-sm text-[#FAEED1]">Enjoy every moment with our warmth.</p>
+            <p className="text-sm text-[#FAEED1]">Nikmati setiap momen dengan kehangatan kami.</p>
           </motion.div>
 
           {/* Tautan Cepat - muncul pertama dari kanan */}

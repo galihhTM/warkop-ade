@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 const PromoCard = ({ title, imageSrc, bundleType, bgColor }) => (
   <div className={`relative ${bgColor} rounded-xl overflow-hidden shadow-lg p-6 flex flex-col items-center text-white h-full transition duration-300 hover:scale-[1.02]`}>
     <div className="relative z-10 w-full flex justify-between items-start mb-4">
-      <span className="text-xs font-bold text-[#cabfa7] uppercase px-1">To Days</span>
+      <span className="text-xs font-bold text-[#cabfa7] uppercase px-1">Untuk Hari Ini</span>
       <div className="text-right">
         <p className="text-xl font-bold uppercase">{bundleType}</p>
       </div>
@@ -76,7 +76,7 @@ export const BundleSection = () => {
           animate={controls}
           className="text-5xl md:text-6xl font-extrabold text-[#382a25] font-saira"
         >
-          Bundle Warkop
+          Paket Warkop
         </motion.h2>
         <motion.p
           variants={subtitleVariants}
@@ -84,17 +84,17 @@ export const BundleSection = () => {
           animate={controls}
           className="text-lg text-[#121010] mt-2 max-w-2xl mx-auto"
         >
-          Temukan Menu Bundle Pilihan Kamu di Tempat Kami
+          Temukan Menu Paket Pilihan Kamu di Tempat Kami
         </motion.p>
       </div>
 
       {/* GRID CARD */}
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
         {[
-          { title: "Bundle Jomblo", bundleType: "Bundle Jomblo", imageSrc: "/mie_bangladesh.png" },
-          { title: "Bundle Pasangan", bundleType: "Bundle Pasangan", imageSrc: "/mie_bangladesh.png" },
-          { title: "Bundle Keluarga", bundleType: "Bundle Keluarga", imageSrc: "/mie_bangladesh.png" },
-          { title: "Bundle Anak-Anak", bundleType: "Bundle Anak-Anak", imageSrc: "/mie_bangladesh.png" },
+          { title: "Paket Sarapan", bundleType: "Paket Sarapan", imageSrc: "/../bundle/Sarapan.png" },
+          { title: "Paket Nugas", bundleType: "Paket Nugas", imageSrc: "/../bundle/Nugas.png" },
+          { title: "Paket Bahagia", bundleType: "Paket Bahagia", imageSrc: "/../bundle/Happy.png" },
+          { title: "Paket Kenyang", bundleType: "Paket Kenyang", imageSrc: "/../bundle/Kenyang.png" },
         ].map((item, i) => (
           <motion.div
             key={i}

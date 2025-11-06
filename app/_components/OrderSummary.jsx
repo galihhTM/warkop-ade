@@ -105,10 +105,7 @@ export const OrderSummary = ({
       {/* Daftar Pesanan */}
       <div className="p-6">
         <div className="bg-[#d4c3a3] rounded-md px-4 py-2 mb-4">
-          <p className="font-semibold text-sm">Meja {randomTable()}</p>
-          <p className="text-xs opacity-80">
-            Jumlah Pengunjung: {visitorCount}
-          </p>
+          <p className="font-semibold text-md p-1">Jumlah Pengunjung: {visitorCount}</p>
         </div>
 
         {Object.values(selectedItems).map((item) => (
@@ -146,7 +143,7 @@ export const OrderSummary = ({
             disabled={loading}
             className="bg-[#382a25] text-[#faeed1] font-bold py-2 px-6 rounded-full hover:bg-[#4b3b34] transition disabled:opacity-70"
           >
-            {loading ? "Memproses..." : "Bayar"}
+            {loading ? "Memproses..." : "Bayar di Kasir"}
           </button>
         </div>
       </div>

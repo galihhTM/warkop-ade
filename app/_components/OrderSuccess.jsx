@@ -226,7 +226,7 @@ export const OrderSuccess = ({
             variant="default"
             className="w-full bg-[#382a25] text-[#faeed1] font-bold py-3 rounded-full hover:bg-[#4b3b34] transition h-auto"
         >
-          ⬇️ Cetak/Download Invoice PDF
+          Cetak/Download Invoice PDF
         </Button>
 
         {/* Tombol Kembali */}

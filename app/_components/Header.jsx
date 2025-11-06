@@ -45,7 +45,7 @@ function Header() {
     const navItems = [
         { label: 'Beranda', target: 'beranda' },
         { label: 'Pesan', target: 'menu' },
-        { label: 'Bundle', target: 'bundle' },
+        { label: 'Paket', target: 'bundle' },
         { label: 'Tentang', target: 'footer' },
         { label: 'Menu', target: 'menu' },
     ];
